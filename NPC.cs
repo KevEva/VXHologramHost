@@ -173,7 +173,7 @@ public class NPC : MonoBehaviour
         return distance;
     }
 
-    // Gettng degree bearing
+    // Getting degree bearing
 
     public static double Bearing(double UserLat, double UserLog, double SetLat, double SetLog)
     {
@@ -190,7 +190,7 @@ public class NPC : MonoBehaviour
         return angle * Math.PI / 180.0d;
     }
 
-    // static double DegressBearing(double UserLat, double UserLog, double SetLat, double SetLog){
+    // static double DegreesBearing(double UserLat, double UserLog, double SetLat, double SetLog){
     //     var dLon = ToRad(SetLog-UserLog);
     //     var dPhi = Math.Log(
     //         Math.Tan(ToRad(SetLat)/2+Math.PI/4)/Math.Tan(ToRad(UserLat)/2+Math.PI/4));
