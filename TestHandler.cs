@@ -9,17 +9,27 @@ public class TestHandler : MonoBehaviour
 {
 
     public NPC TestNPC;
+    //Input fields
     public InputField inputField;
     public InputField keywordField;
     public InputField resposneField;
+    // Responses Database
     private EntityResponses _responses;
+    //User input
     private string input;
+    //Location Database
+    private LocationDataPoints _location;
+
 
     void Start()
     {
         //Get responses from json
         string json = File.ReadAllText(Application.dataPath + "/ResponseDataFile.json");
         _responses = JsonUtility.FromJson<EntityResponses>(json);
+
+        //Get lat long from json
+        string json = File.ReadAllText(Application.dataPath + "/LocationData.json");
+        _location = JsonUtility.FromJson<LocationDataPoints>(json);
     }
     public void ReadStringInput()
     {

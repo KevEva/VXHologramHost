@@ -1,0 +1,39 @@
+{
+  "location": [
+    {
+      "name": "VXLab Entrance",
+      "note": "Frame of reference for VXLab objects, relative to midpoint of entry doors",
+      "description": "The VXLab is entered through double sliding doors on its West side",
+      "coordinate_system": "GPS, everything while be based of this, this is the 0,0,0",
+      "locations": {
+        "latitude": -37.8065933,
+        "longitude": 144.963651,
+        "isStatic": true
+      }
+    },
+    {
+      "name": "Vivi",
+      "note": "Location of the 32 inch holobox",
+      "description": "Vivi runs on a 32 inch holographic display",
+      "coordinate_system": "relative, user will entre a GPS location and arthimatic calculations will be done, based off this location",
+      "locations": {
+        "relative_to": "VXLab Entrance",
+        "latitude": -37.8066045,
+        "longitude": 144.9636518,
+        "isStatic": false
+      }
+    },
+    {
+      "name": "Flight Sim",
+      "note": "Location of flight simulator",
+      "description": "This is the flight simulator within the VXLab",
+      "coordinate_system": "GPS location, We will enter the location of the flight sim.",
+      "locations": {
+        "relative_to": "VXLab Entrance and Vivi",
+        "latitude": 0.0,
+        "longitude": 0.0,
+        "isStatic": true
+      }
+    }
+  ]
+}
