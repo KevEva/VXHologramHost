@@ -36,7 +36,6 @@
       }
     },
     { 
-      ### To be worked on
       "name": "Rosie",
       "note": "Location of Rosie robot",
       "description": "Rosie, the two-armed swordfighting robot is to your [direction]",
