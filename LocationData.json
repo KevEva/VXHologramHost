@@ -14,7 +14,7 @@
     {
       "name": "Vivi",
       "note": "Location of the 32 inch holobox",
-      "description": "Vivi runs on a 32 inch holographic display",
+      "description": "Vivi runs on a 32 inch and/or 60 inch holographic display",
       "coordinate_system": "relative, user will entre a GPS location and arthimatic calculations will be done, based off this location",
       "locations": {
         "relative_to": "VXLab Entrance",
@@ -30,6 +30,67 @@
       "coordinate_system": "GPS location, We will enter the location of the flight sim.",
       "locations": {
         "relative_to": "VXLab Entrance and Vivi",
+        "latitude": 0.0,
+        "longitude": 0.0,
+        "isStatic": true
+      }
+    },
+    { 
+      ### To be worked on
+      "name": "Rosie",
+      "note": "Location of Rosie robot",
+      "description": "Rosie, the two-armed swordfighting robot is to your [direction]",
+      "coordinate_system": "GPS location, We will enter the location of the Rosie.",
+      "locations": {
+        "relative_to": "N/A",
+        "latitude": 0.0,
+        "longitude": 0.0,
+        "isStatic": true
+      }
+    },
+    { 
+      "name": "Tiago  ",
+      "note": "Location of Tiago robot",
+      "description": "Tiago, the two-armed swordfighting robot is to your [direction]",
+      "coordinate_system": "GPS location, We will enter the location of the Tiago.",
+      "locations": {
+        "relative_to": "N/A",
+        "latitude": 0.0,
+        "longitude": 0.0,
+        "isStatic": true
+      }
+    },
+    { 
+      "name": "Gov Lab",
+      "note": "Location of Gov Lab",
+      "description": "The Gov Lab, or Global Operations Visualization Laboratory is at your [direction]",
+      "coordinate_system": "GPS location, We will enter the location of the Gov Lab.",
+      "locations": {
+        "relative_to": "N/A",
+        "latitude": 0.0,
+        "longitude": 0.0,
+        "isStatic": true
+      }
+    },
+    { 
+      "name": "Rokoko Smartsuits",
+      "note": "Location of Rokoko Smartsuits",
+      "description": "The Rokoko Smartsuits are located in the Gov Lab, specifically to my [direction]",
+      "coordinate_system": "GPS location, We will enter the location of the Rokoko Smartsuits.",
+      "locations": {
+        "relative_to": "N/A",
+        "latitude": 0.0,
+        "longitude": 0.0,
+        "isStatic": true
+      }
+    },
+    { 
+      "name": "Race Hub",
+      "note": "Location of Race Hub",
+      "description": "The Race Hub is located to my [direction]",
+      "coordinate_system": "GPS location, We will enter the location of the Race Hub.",
+      "locations": {
+        "relative_to": "N/A",
         "latitude": 0.0,
         "longitude": 0.0,
         "isStatic": true
