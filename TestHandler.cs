@@ -12,7 +12,7 @@ public class TestHandler : MonoBehaviour
     //Input fields
     public InputField inputField;
     public InputField keywordField;
-    public InputField resposneField;
+    public InputField responseField;
     // Responses Database
     private EntityResponses _responses;
     //User input
