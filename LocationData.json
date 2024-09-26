@@ -6,8 +6,8 @@
       "description": "The VXLab is entered through double sliding doors on its West side",
       "coordinate_system": "GPS, everything while be based of this, this is the 0,0,0",
       "locations": {
-        "latitude": -37.8065933,
-        "longitude": 144.963651,
+        "latitude": -37.8067684,
+        "longitude": 144.9635864,
         "isStatic": true
       }
     },
@@ -18,8 +18,8 @@
       "coordinate_system": "relative, user will entre a GPS location and arthimatic calculations will be done, based off this location",
       "locations": {
         "relative_to": "VXLab Entrance",
-        "latitude": -37.8066045,
-        "longitude": 144.9636518,
+        "latitude": -37.8067626,
+        "longitude": 144.9635921,
         "isStatic": false
       }
     },
@@ -30,8 +30,8 @@
       "coordinate_system": "GPS location, We will enter the location of the flight sim.",
       "locations": {
         "relative_to": "VXLab Entrance and Vivi",
-        "latitude": 0.0,
-        "longitude": 0.0,
+        "latitude": -37.8067639,
+        "longitude": 144.9635934,
         "isStatic": true
       }
     },
@@ -42,8 +42,8 @@
       "coordinate_system": "GPS location, We will enter the location of the Rosie.",
       "locations": {
         "relative_to": "N/A",
-        "latitude": 0.0,
-        "longitude": 0.0,
+        "latitude": -37.8067563,
+        "longitude": 144.9636156,
         "isStatic": true
       }
     },
@@ -54,8 +54,8 @@
       "coordinate_system": "GPS location, We will enter the location of the Tiago.",
       "locations": {
         "relative_to": "N/A",
-        "latitude": 0.0,
-        "longitude": 0.0,
+        "latitude": -37.8067584,
+        "longitude": 144.9636169,
         "isStatic": true
       }
     },
@@ -66,8 +66,8 @@
       "coordinate_system": "GPS location, We will enter the location of the Gov Lab.",
       "locations": {
         "relative_to": "N/A",
-        "latitude": 0.0,
-        "longitude": 0.0,
+        "latitude": -37.8067486,
+        "longitude": 144.9636216,
         "isStatic": true
       }
     },
@@ -78,8 +78,8 @@
       "coordinate_system": "GPS location, We will enter the location of the Rokoko Smartsuits.",
       "locations": {
         "relative_to": "N/A",
-        "latitude": 0.0,
-        "longitude": 0.0,
+        "latitude": -37.8067454,
+        "longitude": 144.9636407,
         "isStatic": true
       }
     },
@@ -90,8 +90,56 @@
       "coordinate_system": "GPS location, We will enter the location of the Race Hub.",
       "locations": {
         "relative_to": "N/A",
-        "latitude": 0.0,
-        "longitude": 0.0,
+        "latitude": -37.8067539,
+        "longitude": 144.9635559,
+        "isStatic": true
+      }
+    },
+    { 
+      "name": "Ian Peake's Office",
+      "note": "Location of Ian's Office Space",
+      "description": "His office is located to my [direction]",
+      "coordinate_system": "GPS location, We will enter the location of the office.",
+      "locations": {
+        "relative_to": "N/A",
+        "latitude": -37.8067695,
+        "longitude": 144.9635991,
+        "isStatic": true
+      }
+    },
+    { 
+      "name": "First Aid and Fire Extinguisher",
+      "note": "Location of Emergency Equipment",
+      "description": "The First Aid box and fire extinguisher are located to my [direction]",
+      "coordinate_system": "GPS location, We will enter the location of the emergency equipment.",
+      "locations": {
+        "relative_to": "N/A",
+        "latitude": -37.8067600,
+        "longitude": 144.9636142,
+        "isStatic": true
+      }
+    },
+    { 
+      "name": "Unused VR Harness",
+      "note": "Location of Red VR Harness",
+      "description": "The Unused VR Harness, now used as a computer stand, is located to my [direction]",
+      "coordinate_system": "GPS location, We will enter the location of the Unused Harness.",
+      "locations": {
+        "relative_to": "N/A",
+        "latitude": -37.8067682,
+        "longitude": 144.9636474,
+        "isStatic": true
+      }
+    },
+    { 
+      "name": "Rubbish Bin",
+      "note": "Location of Rubbish Bin",
+      "description": "The nearest Rubbish Bin is next to the VXLab entrance doors, located to my [direction]",
+      "coordinate_system": "GPS location, We will enter the location of the bin.",
+      "locations": {
+        "relative_to": "N/A",
+        "latitude": -37.8067684,
+        "longitude": 144.9635864,
         "isStatic": true
       }
     }
