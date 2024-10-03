@@ -18,8 +18,8 @@
       "coordinate_system": "relative, user will entre a GPS location and arthimatic calculations will be done, based off this location",
       "locations": {
         "relative_to": "VXLab Entrance",
-        "x": 0,
-        "y": 0,
+        "x": 0.5,
+        "y": 2,
         "isStatic": false
       }
     },
@@ -30,8 +30,8 @@
       "coordinate_system": "GPS location, We will enter the location of the flight sim.",
       "locations": {
         "relative_to": "VXLab Entrance",
-        "x": 0,
-        "y": 0,
+        "x": -2,
+        "y": 7,
         "isStatic": true
       }
     },
@@ -43,7 +43,7 @@
       "locations": {
         "relative_to": "VXLab Entrance",
         "x": 0,
-        "y": 0,
+        "y": 11,
         "isStatic": true
       }
     },
@@ -54,8 +54,8 @@
       "coordinate_system": "GPS location, We will enter the location of the Tiago.",
       "locations": {
         "relative_to": "VXLab Entrance",
-        "x": 0,
-        "y": 0,
+        "x": 1,
+        "y": 11.5,
         "isStatic": true
       }
     },
@@ -66,8 +66,8 @@
       "coordinate_system": "GPS location, We will enter the location of the Gov Lab.",
       "locations": {
         "relative_to": "VXLab Entrance",
-        "x": 0,
-        "y": 0,
+        "x": 5,
+        "y": 8,
         "isStatic": true
       }
     },
@@ -78,8 +78,8 @@
       "coordinate_system": "GPS location, We will enter the location of the Rokoko Smartsuits.",
       "locations": {
         "relative_to": "VXLab Entrance",
-        "x": 0,
-        "y": 0,
+        "x": 6,
+        "y": 13,
         "isStatic": true
       }
     },
@@ -90,8 +90,8 @@
       "coordinate_system": "GPS location, We will enter the location of the Race Hub.",
       "locations": {
         "relative_to": "VXLab Entrance",
-        "x": 0,
-        "y": 0,
+        "x": 2,
+        "y": -10,
         "isStatic": true
       }
     },
@@ -102,8 +102,8 @@
       "coordinate_system": "GPS location, We will enter the location of the office.",
       "locations": {
         "relative_to": "VXLab Entrance",
-        "x": 0,
-        "y": 0,
+        "x": -4,
+        "y": 13,
         "isStatic": true
       }
     },
@@ -114,8 +114,8 @@
       "coordinate_system": "GPS location, We will enter the location of the emergency equipment.",
       "locations": {
         "relative_to": "VXLab Entrance",
-        "x": -37.8067600,
-        "y": 144.9636142,
+        "x": 1,
+        "y": 2,
         "isStatic": true
       }
     },
@@ -126,8 +126,8 @@
       "coordinate_system": "GPS location, We will enter the location of the Unused Harness.",
       "locations": {
         "relative_to": "VXLab Entrance",
-        "x": 0,
-        "y": 0,
+        "x": 3,
+        "y": 7,
         "isStatic": true
       }
     },
@@ -138,8 +138,8 @@
       "coordinate_system": "GPS location, We will enter the location of the bin.",
       "locations": {
         "relative_to": "VXLab Entrance",
-        "x": 0,
-        "y": 0,
+        "x": 0.5,
+        "y": 0.5,
         "isStatic": true
       }
     }
