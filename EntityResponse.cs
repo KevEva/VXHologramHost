@@ -14,20 +14,6 @@ public class EntityResponse
 }
 
 [Serializable]
-public class LocationData
-{
-    public string Name;
-    public Location Location;
-
-}
-
-public class Location {
-    public double latitude;
-    public double longitude;
-    public boolean isStatic;
-}
-
-[Serializable]
 public class EntityResponses
 {
 
@@ -35,7 +21,25 @@ public class EntityResponses
 }
 
 [Serializable]
-public class LocationDataPoints
+public class LocationData
+{
+    public string name;
+    public string note;
+    public string description;
+    public string coordinate_system;
+    public Locations locations;
+}
+
+[Serializable]
+public class Locations
+{
+    public double latitude;
+    public double longitude;
+    public bool isStatic;
+    public string relative_to;
+}
+[Serializable]
+public class LocationDatas
 {
     public LocationData[] location;
 }
