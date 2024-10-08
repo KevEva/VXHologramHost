@@ -27,7 +27,7 @@ public class NPC : MonoBehaviour
     private float _idleTime;
     private int _boredAnimation;
     private EntityResponses _responses;
-    private LocationDataPoints _location;
+    private LocationDatas _location;
 
     public enum Direction
     {
@@ -58,11 +58,11 @@ public class NPC : MonoBehaviour
         animator.SetFloat("BoredIdle", 1.46f);
 
         //Load the Json responses and location
-        string json = File.ReadAllText(Application.dataPath + "/ResponseDataFile.json");
-        _responses = JsonUtility.FromJson<EntityResponses>(json);
+        string responseJson = File.ReadAllText(Application.dataPath + "/ResponseDataFile.json");
+        _responses = JsonUtility.FromJson<EntityResponses>(responseJson);
 
-        string json = File.ReadAllText(Application.dataPath + "/LocationData.json");
-        _location = JsonUtility.FromJson<LocationDataPoints>(json);
+        string locationJson = File.ReadAllText(Application.dataPath + "/LocationData.json");
+        _location = JsonUtility.FromJson<LocationDatas>(locationJson);
     }
 
     public void Destroy()
@@ -105,11 +105,15 @@ public class NPC : MonoBehaviour
         }
 
     */
-
-    public LocationData GetLocationFromEntity(string name, LocationDataPoints locationWrapper)
+    public LocationData GetViviLocation(string name, LocationDatas locationWrapper)
+    {
+        LocationData locVivi = new List<LocationData>(locationWrapper.location).FirstOrDefault(resp => resp.name == name);
+        return locVivi;
+    }
+    public LocationData GetLocationFromEntity(string name, LocationDatas locationWrapper)
     {
         // Search the responses list for the given category and get the releavent properties.
-        LocationData lcObj = new List<LocationData>(locationWrapper.location).FirstOrDefault(resp => resp.name == userLocation);
+        LocationData locObj = new List<LocationData>(locationWrapper.location).FirstOrDefault(resp => resp.name == name);
         return locObj;
     }
 
@@ -135,12 +139,33 @@ public class NPC : MonoBehaviour
             {
                 EntityResponse respObj = GetResponseFromEntity(entity.category, _responses);
                 response = respObj.TextResponse;
-                // if statement, if direction of entity exist in data base, point in direction else, do random animation
                 animator.SetTrigger(respObj.AnimationTrigger + getRandomTrigger(1));
             }
             Debug.Log(response);
         }
+        // Check if there is a result and if the top scoring intent is "Location"
+        else if (res != null && res.result.prediction.topIntent == "Location")
+        {
+            // Check the returned category, find the response, and apply properties.
+            foreach (var entity in res.result.prediction.entities)
+            {
+                LocationData locObj = GetLocationFromEntity(entity.name, _location);
+                // Get Vivi location specifically from the json file.
+                LocationData locVivi = new List<LocationData>(_location.location).Where(l => l.name == "Vivi").FirstOrDefault();
+                response = locObj.description + Bearing(locVivi.locations.latitude, locVivi.locations.longitude, locObj.locations.latitude, locObj.locations.longitude);
+                    // if (response != null)
+                    //     {
+                    //         LocationData locVivi = new List<LocationData>(_location.location).Where(l => l.name == "Vivi").FirstOrDefault();
+                    //         // double UserLat = locVivi.locations.latitude;
+                    //         // double UserLog = locVivi.locations.longitude;
 
+                    //         // double SetLat = locObj.latitude;
+                    //         // double SetLog = locObj.longitude;
+                    //         response = locObj.description + Bearing(locVivi.locations.latitude, locVivi.locations.longitude, locObj.locations.latitude, locObj.locations.longitude);
+                    //     }
+            }
+            Debug.Log(response);
+        }
         else if (res != null && topIntent == "Tell me")
         {
             response = "Lalalala";
@@ -157,24 +182,23 @@ public class NPC : MonoBehaviour
         }
     }
 
-    // Pinpoint location relative to set locations
-    public void LocationResult()
-    {
-        // Get the lat and long.
-        double latA = UserLat;
-        double longA = UserLog;
-        double latB = SetLat;
-        double longB = SetLog;
-        // GeoCoordinate the distance in metres between the two provided values
-        var locA = new GeoCoordinate(latA, longA);
-        var locB = new GeoCoordinate(latB, longB);
-        double distance = locA.GetDistanceTo(locB); // metres
-        Debug.Log(distance);
-        return distance;
-    }
+    // // Pinpoint location relative to set locations
+    // public void LocationResult()
+    // {
+    //     // Get the lat and long.
+    //     double latA = UserLat;
+    //     double longA = UserLog;
+    //     double latB = SetLat;
+    //     double longB = SetLog;
+    //     // GeoCoordinate the distance in metres between the two provided values
+    //     var locA = new GeoCoordinate(latA, longA);
+    //     var locB = new GeoCoordinate(latB, longB);
+    //     double distance = locA.GetDistanceTo(locB); // metres
+    //     Debug.Log(distance);
+    //     return distance;
+    // }
 
-    // Getting degree bearing
-
+    // Gettng degree bearing
     public static double Bearing(double UserLat, double UserLog, double SetLat, double SetLog)
     {
         //Converting lat and long from degress into radians
@@ -190,7 +214,7 @@ public class NPC : MonoBehaviour
         return angle * Math.PI / 180.0d;
     }
 
-    // static double DegreesBearing(double UserLat, double UserLog, double SetLat, double SetLog){
+    // static double DegressBearing(double UserLat, double UserLog, double SetLat, double SetLog){
     //     var dLon = ToRad(SetLog-UserLog);
     //     var dPhi = Math.Log(
     //         Math.Tan(ToRad(SetLat)/2+Math.PI/4)/Math.Tan(ToRad(UserLat)/2+Math.PI/4));
@@ -322,33 +346,34 @@ public class NPC : MonoBehaviour
     }
     Direction getBestDirection(Vector3 target_position)
     {
-        // float degree_to_point = getDegree(target_position);
+        float degree_to_point = getDegree(target_position);
 
-        // Direction[] directions = (Direction[])Enum.GetValues(typeof(Direction));
+        Direction[] directions = (Direction[])Enum.GetValues(typeof(Direction));
 
-        // Direction best_direction = Direction.FRONT;
-        // float lowest_dif = 360;
-        // foreach (Direction dir in directions)
-        // {
-        //     // float angle_diff = Mathf.Abs((degree_to_point % 360) - (float)dir);
+        Direction best_direction = Direction.FRONT;
+        float lowest_dif = 360;
+        foreach (Direction dir in directions)
+        {
+            // float angle_diff = Mathf.Abs((degree_to_point % 360) - (float)dir);
 
-        //     float angle_diff = Mathf.Min(Mathf.Abs((degree_to_point % 360) - (float)dir), 360 - Mathf.Abs((degree_to_point % 360) - (float)dir));
+            float angle_diff = Mathf.Min(Mathf.Abs((degree_to_point % 360) - (float)dir), 360 - Mathf.Abs((degree_to_point % 360) - (float)dir));
 
-        //     if (angle_diff < lowest_dif)
-        //     {
-        //         lowest_dif = angle_diff;
-        //         best_direction = dir;
-        //     }
-        // }
+            if (angle_diff < lowest_dif)
+            {
+                lowest_dif = angle_diff;
+                best_direction = dir;
+            }
+        }
 
-        // Debug.Log("best_direction: " + best_direction + ", lowest_dif: " + lowest_dif);
-        // return best_direction;
+        Debug.Log("best_direction: " + best_direction + ", lowest_dif: " + lowest_dif);
+        return best_direction;
 
+        // Kevin edit
         //Converting lat and long from degress into radians
-        double x = Math.Cos(DegreesToRadians(UserLat)) * Math.Sin(DegreesToRadians(SetLat)) - Math.Sin(DegreesToRadians(UserLat)) * Math.Cos(DegreesToRadians(SetLat)) * Math.Cos(DegreesToRadians(SetLog - UserLog));
-        double y = Math.Sin(DegreesToRadians(SetLog - UserLog)) * Math.Cos(DegreesToRadians(SetLat));
+        // double x = Math.Cos(DegreesToRadians(UserLat)) * Math.Sin(DegreesToRadians(SetLat)) - Math.Sin(DegreesToRadians(UserLat)) * Math.Cos(DegreesToRadians(SetLat)) * Math.Cos(DegreesToRadians(SetLog - UserLog));
+        // double y = Math.Sin(DegreesToRadians(SetLog - UserLog)) * Math.Cos(DegreesToRadians(SetLat));
 
-        return (Math.Atan2(y, x) + Math.PI * 2) % (Math.PI * 2)
+        // return (Math.Atan2(y, x) + Math.PI * 2) % (Math.PI * 2);
 
     }
 
@@ -370,10 +395,10 @@ public class NPC : MonoBehaviour
         return yRotationNormalized;
     }
 
-    public static double DegreesToRadians(double angle)
-    {
-        return angle * Math.PI / 180.0d;
-    }
+    // public static double DegreesToRadians(double angle)
+    // {
+    //     return angle * Math.PI / 180.0d;
+    // }
 
     private float NormalizeAngle360(float angle)
     {

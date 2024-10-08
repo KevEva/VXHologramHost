@@ -13,6 +13,7 @@ public class ConversationResult
     {
         public string category;
         public string text;
+        public string name;
     }
     [Serializable]
     public class Prediction
