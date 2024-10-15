@@ -58,10 +58,10 @@ public class NPC : MonoBehaviour
         animator.SetFloat("BoredIdle", 1.46f);
 
         //Load the Json responses and location
-        string responseJson = File.ReadAllText(Application.dataPath + "/ResponseDataFile.json");
+        string responseJson = File.ReadAllText(Application.dataPath + "/Resources/ResponseDataFile.json");
         _responses = JsonUtility.FromJson<EntityResponses>(responseJson);
 
-        string locationJson = File.ReadAllText(Application.dataPath + "/LocationData.json");
+        string locationJson = File.ReadAllText(Application.dataPath + "/Resources/LocationData.json");
         _location = JsonUtility.FromJson<LocationDatas>(locationJson);
     }
 
