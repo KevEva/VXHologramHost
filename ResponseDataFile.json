@@ -2,7 +2,7 @@
     "responses": [
         {
             "CategoryKey": "Greeting",
-            "TextResponse": "Hi, welcome to the school of computing technologies at R-M-I-T, a global university of research, enterprise and innovataion.",
+            "TextResponse": "Hi, welcome to the school of computing technologies at R-M-I-T, a global university of research, enterprise and innovation.",
             "AnimationTrigger": "WaveTrigger"
         },
         {
