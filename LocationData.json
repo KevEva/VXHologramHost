@@ -1,7 +1,7 @@
 {
   "location": [
     {
-      "name": "VXLab Entrance",
+      "CategoryKey": "VXLab Entrance",
       "note": "Frame of reference for VXLab objects, relative to midpoint of entry doors",
       "description": "The VXLab is entered through double sliding doors on its West side",
       "coordinate_system": "GPS, everything while be based of this, this is the 0,0,0",
@@ -12,134 +12,145 @@
       }
     },
     {
-      "name": "Vivi",
+      "CategoryKey": "Vivi",
       "note": "Location of the 32 inch holobox",
-      "description": "Vivi runs on a 32 inch and/or 60 inch holographic display",
+      "description": "Vivi runs on a 32 inch and/or 60 inch holographic display that is located directly to your ",
       "coordinate_system": "relative, user will entre a GPS location and arthimatic calculations will be done, based off this location",
       "locations": {
         "relative_to": "VXLab Entrance",
-        "x": 1.5,
-        "y": 1.5,
+        "x": 0.5,
+        "y": 0,
+        "z": 2,
         "isStatic": false
       }
     },
     {
-      "name": "Flight Sim",
+      "CategoryKey": "Flight Sim",
       "note": "Location of flight simulator",
-      "description": "This is the flight simulator within the VXLab",
+      "description": "This is the flight simulator within the VXLab located to your ",
       "coordinate_system": "GPS location, We will enter the location of the flight sim.",
       "locations": {
         "relative_to": "VXLab Entrance",
-        "x": 7,
-        "y": -2,
+        "x": -2,
+        "y": 0,
+        "z": 7,
         "isStatic": true
       }
     },
-    { 
-      "name": "Rosie",
+    {
+      "CategoryKey": "Rosie",
       "note": "Location of Rosie robot",
-      "description": "Rosie, the two-armed swordfighting robot is to your [direction]",
+      "description": "Rosie, the two-armed swordfighting robot is to your ",
       "coordinate_system": "GPS location, We will enter the location of the Rosie.",
       "locations": {
         "relative_to": "VXLab Entrance",
-        "x": 11,
+        "x": 0,
         "y": 0,
+        "z": 11,
         "isStatic": true
       }
     },
-    { 
-      "name": "Tiago  ",
+    {
+      "CategoryKey": "Tiago",
       "note": "Location of Tiago robot",
-      "description": "Tiago, the two-armed swordfighting robot is to your [direction]",
+      "description": "Tiago, the two-armed swordfighting robot is to your ",
       "coordinate_system": "GPS location, We will enter the location of the Tiago.",
       "locations": {
         "relative_to": "VXLab Entrance",
-        "x": 11.5,
-        "y": 1,
+        "x": 1,
+        "y": 0,
+        "z": 11.5,
         "isStatic": true
       }
     },
-    { 
-      "name": "Gov Lab",
+    {
+      "CategoryKey": "Gov Lab",
       "note": "Location of Gov Lab",
-      "description": "The Gov Lab, or Global Operations Visualization Laboratory is at your [direction]",
+      "description": "The Gov Lab, or Global Operations Visualization Laboratory is at your ",
       "coordinate_system": "GPS location, We will enter the location of the Gov Lab.",
       "locations": {
         "relative_to": "VXLab Entrance",
-        "x": 7.5,
-        "y": 4,
+        "x": 5,
+        "y": 0,
+        "z": 8,
         "isStatic": true
       }
     },
-    { 
-      "name": "Rokoko Smartsuits",
+    {
+      "CategoryKey": "Rokoko Smartsuits",
       "note": "Location of Rokoko Smartsuits",
-      "description": "The Rokoko Smartsuits are located in the Gov Lab, specifically to my [direction]",
+      "description": "The Rokoko Smartsuits are located in the Gov Lab, specifically to my ",
       "coordinate_system": "GPS location, We will enter the location of the Rokoko Smartsuits.",
       "locations": {
         "relative_to": "VXLab Entrance",
-        "x": 13,
-        "y": 6,
+        "x": 6,
+        "y": 0,
+        "z": 13,
         "isStatic": true
       }
     },
-    { 
-      "name": "Race Hub",
+    {
+      "CategoryKey": "Race Hub",
       "note": "Location of Race Hub",
-      "description": "The Race Hub is located to my [direction]",
-      "coordinate_system": "GPS location, We will enter the location of the Race Hub.",
-      "locations": {
-        "relative_to": "VXLab Entrance",
-        "x": -5,
-        "y": 1,
-        "isStatic": true
-      }
-    },
-    { 
-      "name": "Ian Peake's Office",
-      "note": "Location of Ian's Office Space",
-      "description": "His office is located to my [direction]",
-      "coordinate_system": "GPS location, We will enter the location of the office.",
-      "locations": {
-        "relative_to": "VXLab Entrance",
-        "x": 13,
-        "y": -3,
-        "isStatic": true
-      }
-    },
-    { 
-      "name": "First Aid and Fire Extinguisher",
-      "note": "Location of Emergency Equipment",
-      "description": "The First Aid box and fire extinguisher are located to my [direction]",
-      "coordinate_system": "GPS location, We will enter the location of the emergency equipment.",
+      "description": "The Race Hub is located to my ",
+      "coordinate_system": "GPS location, We will enter the location of the Race Hub. ",
       "locations": {
         "relative_to": "VXLab Entrance",
         "x": 2,
-        "y": 2.5,
+        "y": 0,
+        "z": -10,
         "isStatic": true
       }
     },
-    { 
-      "name": "Unused VR Harness",
+    {
+      "CategoryKey": "Ian Peake's Office",
+      "note": "Location of Ian's Office Space",
+      "description": "His office is located to my ",
+      "coordinate_system": "GPS location, We will enter the location of the office.",
+      "locations": {
+        "relative_to": "VXLab Entrance",
+        "x": -4,
+        "y": 0,
+        "z": 13,
+        "isStatic": true
+      }
+    },
+    {
+      "CategoryKey": "First Aid and Fire Extinguisher",
+      "note": "Location of Emergency Equipment",
+      "description": "The First Aid box and fire extinguisher are located to my ",
+      "coordinate_system": "GPS location, We will enter the location of the emergency equipment.",
+      "locations": {
+        "relative_to": "VXLab Entrance",
+        "x": 1,
+        "y": 0,
+        "z": 2,
+        "isStatic": true
+      }
+    },
+    {
+      "CategoryKey": "Unused VR Harness",
       "note": "Location of Red VR Harness",
-      "description": "The Unused VR Harness, now used as a computer stand, is located to my [direction]",
+      "description": "The Unused VR Harness, now used as a computer stand, is located to my ",
       "coordinate_system": "GPS location, We will enter the location of the Unused Harness.",
       "locations": {
         "relative_to": "VXLab Entrance",
-        "x": 6,
-        "y": 2,
+        "x": 3,
+        "y": 0,
+        "z": 7,
         "isStatic": true
       }
     },
-    { 
-      "name": "Rubbish Bin",
+    {
+      "CategoryKey": "Rubbish Bin",
       "note": "Location of Rubbish Bin",
-      "description": "The nearest Rubbish Bin is next to the VXLab entrance doors, located to my [direction]",
+      "description": "The nearest Rubbish Bin is next to the VXLab entrance doors, located to my ",
       "coordinate_system": "GPS location, We will enter the location of the bin.",
       "locations": {
         "relative_to": "VXLab Entrance",
         "x": 0.5,
-        "y": 0.5,
+        "y": 0,
+        "z": 0.5,
         "isStatic": true
       }
     }
