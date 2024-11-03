@@ -1,18 +1,12 @@
-//Vladislava Simakov
-using System;
-using System.Threading;
-using UnityEngine;
-using UnityEngine.UI;
 using Microsoft.CognitiveServices.Speech;
-using UnityEngine.Rendering;
-using WebSocketSharp;
+using Newtonsoft.Json;
+using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Reflection;
-using UniVRM10;
-using Unity.VisualScripting;
 using System.IO;
 using System.Linq;
+using UnityEngine;
+using UnityEngine.UI;
 public class NPC : MonoBehaviour
 {
     private SpeechConfig speechConfig;
@@ -26,8 +20,10 @@ public class NPC : MonoBehaviour
     private bool _isBored;
     private float _idleTime;
     private int _boredAnimation;
-    private EntityResponses _responses;
+    private EntityResponse _responses;
     private LocationDatas _location;
+    private HashSet<string> locationEntities;
+    private HashSet<string> responseEntities;
 
     public enum Direction
     {
@@ -39,6 +35,9 @@ public class NPC : MonoBehaviour
 
     private void Start()
     {
+        locationEntities = new HashSet<string>();
+        responseEntities = new HashSet<string>();
+
         // replace this with your key 
         string subscriptionKey = Key.subscriptionKey;
         string region = Key.region;
@@ -57,12 +56,38 @@ public class NPC : MonoBehaviour
         //animator.SetFloat("BoredIdle", 0);
         animator.SetFloat("BoredIdle", 1.46f);
 
-        //Load the Json responses and location
-        string responseJson = File.ReadAllText(Application.dataPath + "/Resources/ResponseDataFile.json");
-        _responses = JsonUtility.FromJson<EntityResponses>(responseJson);
+        // Load location data
+        TextAsset locationJson = Resources.Load<TextAsset>("LocationData");
+        if (locationJson != null)
+        {
+            _location = JsonUtility.FromJson<LocationDatas>(locationJson.text);
+            foreach (var location in _location.location)
+            {
+                locationEntities.Add(location.CategoryKey.ToLower());
+            }
+        }
+        else
+        {
+        Debug.LogError("LocationData.json not found in Resources.");
+        }
 
-        string locationJson = File.ReadAllText(Application.dataPath + "/Resources/LocationData.json");
-        _location = JsonUtility.FromJson<LocationDatas>(locationJson);
+        // Load response data
+        TextAsset responseJson = Resources.Load<TextAsset>("ResponseDataFile");
+        if (responseJson != null)
+        {
+            _responses = JsonUtility.FromJson<EntityResponse>(responseJson.text);
+            foreach (var response in _responses.responses)
+            {
+             responseEntities.Add(response.CategoryKey.ToLower());
+            }
+        }
+        else
+        {
+            Debug.LogError("ResponseDataFile.json not found in Resources.");
+        }
+
+        Debug.Log("Loaded location entities: " + string.Join(", ", locationEntities));
+        Debug.Log("Loaded response entities: " + string.Join(", ", responseEntities));
     }
 
     public void Destroy()
@@ -105,138 +130,88 @@ public class NPC : MonoBehaviour
         }
 
     */
-    public LocationData GetViviLocation(string name, LocationDatas locationWrapper)
-    {
-        LocationData locVivi = new List<LocationData>(locationWrapper.location).FirstOrDefault(resp => resp.name == name);
-        return locVivi;
-    }
-    public LocationData GetLocationFromEntity(string name, LocationDatas locationWrapper)
+
+    public LocationData GetLocationFromEntity(string category, LocationDatas locationWrapper)
     {
         // Search the responses list for the given category and get the releavent properties.
-        LocationData locObj = new List<LocationData>(locationWrapper.location).FirstOrDefault(resp => resp.name == name);
+        LocationData locObj = new List<LocationData>(locationWrapper.location).FirstOrDefault(resp => resp.CategoryKey.ToLower() == category.ToLower());
         return locObj;
     }
 
-    public EntityResponse GetResponseFromEntity(string category, EntityResponses responsesWrapper)
+    public Response GetResponseFromEntity(string category, EntityResponse responsesWrapper)
     {
         // Search the responses list for the given category and get the releavent properties.
-        EntityResponse respObj = new List<EntityResponse>(responsesWrapper.responses).FirstOrDefault(resp => resp.CategoryKey == category);
+        Response respObj = new List<Response>(responsesWrapper.responses).FirstOrDefault(resp => resp.CategoryKey.ToLower() == category.ToLower());
         return respObj;
-    }
-
+    } 
+    
     // Read the user entered result and find the approriate response
-    public void ReadResult(ConversationResult res)
-    {
-        Debug.Log("read result has been called");
-        string topIntent = res.result.prediction.topIntent;
-        string response = "Please say again.";
+public void ReadResult(ConversationResult res)
+{
+    Debug.Log("read result has been called");
+    string topIntent = res.result.prediction.topIntent;
+    string response = "Please say again.";
 
-        // Check if there is a result and if the top scoring intent is "TellMe"
-        if (res != null && topIntent == "TellMe")
+    if (res != null && topIntent == "Location")
+    {
+        // Location intent handling
+        foreach (var entity in res.result.prediction.entities)
         {
-            // Check the returned category, find the response, and apply properties.
-            foreach (var entity in res.result.prediction.entities)
+            LocationData locObj = GetLocationFromEntity(entity.category, _location);
+
+            if (locObj != null)
             {
-                EntityResponse respObj = GetResponseFromEntity(entity.category, _responses);
+                // Get the direction from the NPC to the location
+                Direction dir_to_point = getBestDirection(locObj.locations.getPosition());
+                string directionText = dir_to_point.ToString();
+
+                // Construct response with location description and direction
+                response = $"{locObj.description}{directionText}.";
+                
+                // Log and output the final response
+                Debug.Log($"Location response: {response}");
+                StartCoroutine(UpdateOutputText(response));
+                HelloWorld.Instance.SynthesizeSpeech(response);
+
+                // Trigger the animation to point in the calculated direction
+                getEnumDirection(dir_to_point);
+            }
+            else
+            {
+                Debug.LogWarning("Location not found for entity: " + entity.category);
+            }
+        }
+    }
+    else if (res != null && topIntent == "TellMe")
+    {
+        // General intent handling
+        foreach (var entity in res.result.prediction.entities)
+        {
+            Response respObj = GetResponseFromEntity(entity.category, _responses);
+            if (respObj != null)
+            {
                 response = respObj.TextResponse;
+                Debug.Log("General response: " + response);
+
+                StartCoroutine(UpdateOutputText(response));
+                HelloWorld.Instance.SynthesizeSpeech(response);
+
+                // Trigger specific animation for general response
                 animator.SetTrigger(respObj.AnimationTrigger + getRandomTrigger(1));
             }
-            Debug.Log(response);
-        }
-        // Check if there is a result and if the top scoring intent is "Location"
-        else if (res != null && res.result.prediction.topIntent == "Location")
-        {
-            // Check the returned category, find the response, and apply properties.
-            foreach (var entity in res.result.prediction.entities)
+            else
             {
-                LocationData locObj = GetLocationFromEntity(entity.name, _location);
-                // Get Vivi location specifically from the json file.
-                LocationData locVivi = new List<LocationData>(_location.location).Where(l => l.name == "Vivi").FirstOrDefault();
-                response = locObj.description + Bearing(locVivi.locations.latitude, locVivi.locations.longitude, locObj.locations.latitude, locObj.locations.longitude);
-                    // if (response != null)
-                    //     {
-                    //         LocationData locVivi = new List<LocationData>(_location.location).Where(l => l.name == "Vivi").FirstOrDefault();
-                    //         // double UserLat = locVivi.locations.latitude;
-                    //         // double UserLog = locVivi.locations.longitude;
-
-                    //         // double SetLat = locObj.latitude;
-                    //         // double SetLog = locObj.longitude;
-                    //         response = locObj.description + Bearing(locVivi.locations.latitude, locVivi.locations.longitude, locObj.locations.latitude, locObj.locations.longitude);
-                    //     }
+                Debug.LogWarning("Response not found for entity: " + entity.category);
             }
-            Debug.Log(response);
-        }
-        else if (res != null && topIntent == "Tell me")
-        {
-            response = "Lalalala";
-            StartCoroutine(UpdateOutputText(response));
-            HelloWorld.Instance.SynthesizeSpeech(response);
-        }
-
-        else
-        {
-            StartCoroutine(UpdateOutputText(response));
-            HelloWorld.Instance.SynthesizeSpeech(response);
-            Debug.LogError("here");
-            Debug.Log(response);
         }
     }
-
-    // // Pinpoint location relative to set locations
-    // public void LocationResult()
-    // {
-    //     // Get the lat and long.
-    //     double latA = UserLat;
-    //     double longA = UserLog;
-    //     double latB = SetLat;
-    //     double longB = SetLog;
-    //     // GeoCoordinate the distance in metres between the two provided values
-    //     var locA = new GeoCoordinate(latA, longA);
-    //     var locB = new GeoCoordinate(latB, longB);
-    //     double distance = locA.GetDistanceTo(locB); // metres
-    //     Debug.Log(distance);
-    //     return distance;
-    // }
-
-    // Gettng degree bearing
-    public static double Bearing(double UserLat, double UserLog, double SetLat, double SetLog)
+    else
     {
-        //Converting lat and long from degress into radians
-        double x = Math.Cos(DegreesToRadians(UserLat)) * Math.Sin(DegreesToRadians(SetLat)) - Math.Sin(DegreesToRadians(UserLat)) * Math.Cos(DegreesToRadians(SetLat)) * Math.Cos(DegreesToRadians(SetLog - UserLog));
-        double y = Math.Sin(DegreesToRadians(SetLog - UserLog)) * Math.Cos(DegreesToRadians(SetLat));
-
-        // Math.Atan2 can return negative value, 0 <= output value < 2*PI expected 
-        return (Math.Atan2(y, x) + Math.PI * 2) % (Math.PI * 2);
+        StartCoroutine(UpdateOutputText(response));
+        HelloWorld.Instance.SynthesizeSpeech(response);
+        Debug.LogError("Intent not recognized or response data is missing.");
     }
-    //Transform value into degress
-    public static double DegreesToRadians(double angle)
-    {
-        return angle * Math.PI / 180.0d;
-    }
-
-    // static double DegressBearing(double UserLat, double UserLog, double SetLat, double SetLog){
-    //     var dLon = ToRad(SetLog-UserLog);
-    //     var dPhi = Math.Log(
-    //         Math.Tan(ToRad(SetLat)/2+Math.PI/4)/Math.Tan(ToRad(UserLat)/2+Math.PI/4));
-    //     if (Math.Abs(dLon) > Math.PI)
-    //         dLon = dLon > 0 ? -(2*Math.PI-dLon) : (2*Math.PI+dLon);
-    //     return ToBearing(Math.Atan2(dLon, dPhi));
-    // }
-    // public static double ToRad(double degrees)
-    // {
-    //     return degrees * (Math.PI / 180);
-    // }
-
-    // public static double ToDegrees(double radians)
-    // {
-    //     return radians * 180 / Math.PI;
-    // }
-
-    // public static double ToBearing(double radians) 
-    // {  
-    //     // convert radians to degrees (as bearing: 0...360)
-    //     return (ToDegrees(radians) +360) % 360;
-    // }
+}
 
     //added these
     public void ReadAIResult(string airesponse, ConversationResult res)
@@ -264,13 +239,118 @@ public class NPC : MonoBehaviour
             HelloWorld.Instance.SynthesizeSpeech(airesponse);
         }
     }
+    
+public void HandleUserInput(string userMessage)
+{
+    Debug.Log("Received input: " + userMessage);
+
+    // Define multiple keywords to identify location requests
+    string[] locationKeywords = { "location", "where" };
+    
+    // Check if any of the location keywords are present in the message
+    bool isLocationRequest = locationKeywords.Any(keyword => userMessage.ToLower().Contains(keyword));
+    
+    // Extract the potential entity name from the message
+    string entityCategory = ExtractEntityFromMessage(userMessage);
+
+    // Handle location request using LocationData.json
+    if (isLocationRequest && locationEntities.Contains(entityCategory))
+    {
+        LocationData locObj = GetLocationFromEntity(entityCategory, _location);
+        
+        if (locObj != null)
+        {
+            // Calculate direction
+            Direction dir_to_point = getBestDirection(locObj.locations.getPosition());
+            string directionText = dir_to_point.ToString();
+            
+            // Construct response message with location description and direction
+            string locationMessage = locObj.description + directionText;
+            Debug.Log("Location response: " + locationMessage);
+
+            // Display and synthesize the response
+            StartCoroutine(UpdateOutputText(locationMessage));
+            HelloWorld.Instance.SynthesizeSpeech(locationMessage);
+
+            // Trigger pointing animation based on direction
+            getEnumDirection(dir_to_point);
+            Debug.Log("Triggered directional animation: " + dir_to_point);
+        }
+        else
+        {
+            Debug.LogWarning("Location not found for entity: " + entityCategory);
+        }
+    }
+    else if (!isLocationRequest && responseEntities.Contains(entityCategory))
+    {
+        // For general inquiries, use ResponseDataFile.json
+        Response respObj = GetResponseFromEntity(entityCategory, _responses);
+
+        if (respObj != null)
+        {
+            Debug.Log("Found general response: " + respObj.TextResponse);
+            StartCoroutine(UpdateOutputText(respObj.TextResponse));
+            HelloWorld.Instance.SynthesizeSpeech(respObj.TextResponse);
+            
+            // Trigger the response-specific animation
+            string trigger = respObj.AnimationTrigger + getRandomTrigger(1);
+            Debug.Log("Triggering animation: " + trigger);
+            
+            if (animator != null)
+            {
+                animator.SetTrigger(trigger);
+            }
+            else
+            {
+                Debug.LogError("Animator component is missing or not assigned.");
+            }
+        }
+        else
+        {
+            Debug.LogWarning("No relevant information found for entity: " + entityCategory);
+        }
+    }
+    else
+    {
+        Debug.LogWarning("Entity not found in either data source for: " + entityCategory);
+    }
+}
+
+
+// Helper method to extract entity name from message using known entities
+private string ExtractEntityFromMessage(string message)
+{
+    string lowerMessage = message.ToLower();
+    
+    // Check location entities first
+    foreach (string entity in locationEntities)
+    {
+        if (lowerMessage.Contains(entity))
+        {
+            Debug.Log($"Matched location entity: {entity}");
+            return entity;
+        }
+    }
+
+    // Check response entities
+    foreach (string entity in responseEntities)
+    {
+        if (lowerMessage.Contains(entity))
+        {
+            Debug.Log($"Matched response entity: {entity}");
+            return entity;
+        }
+    }
+
+    Debug.LogWarning("No matching entity found.");
+    return "";  // Return empty if no entity is matched
+}
 
     private IEnumerator UpdateOutputText(string message)
     {
         output_text.text = message;
         yield return null;
     }
-    //added ai read result
 
     //choose a random talking animation for naturalistic motion
     public string getRandomTrigger(int option)
@@ -313,28 +393,28 @@ public class NPC : MonoBehaviour
     }
 
     // point to direction relative to users
-    void getEnumDirection(Direction to_point)
+void getEnumDirection(Direction to_point)
+{
+    switch (to_point)
     {
-        switch (to_point)
-        {
-            case Direction.FRONT:
-                animator.SetTrigger("Forward");
-                break;
-            case Direction.BACK:
-                animator.SetTrigger("Behind");
-                break;
-            case Direction.LEFT:
-                animator.SetTrigger("RightTrigger");
-                break;
-            case Direction.RIGHT:
-                animator.SetTrigger("LeftTrigger");
-                break;
-        }
+        case Direction.FRONT:
+            animator.SetTrigger("Forward");
+            break;
+        case Direction.BACK:
+            animator.SetTrigger("Behind");
+            break;
+        case Direction.LEFT:
+            animator.SetTrigger("LeftTrigger");
+            break;
+        case Direction.RIGHT:
+            animator.SetTrigger("RightTrigger");
+            break;
     }
+}
 
     IEnumerator TriggerAnimations()
     {
-        animator.SetTrigger("WaveTrigger2");
+        animator.SetTrigger("WaveTrigger");
         yield return new WaitForSeconds(9);
         animator.SetTrigger("LeftTrigger");
         yield return new WaitForSeconds(11);
@@ -368,13 +448,6 @@ public class NPC : MonoBehaviour
         Debug.Log("best_direction: " + best_direction + ", lowest_dif: " + lowest_dif);
         return best_direction;
 
-        // Kevin edit
-        //Converting lat and long from degress into radians
-        // double x = Math.Cos(DegreesToRadians(UserLat)) * Math.Sin(DegreesToRadians(SetLat)) - Math.Sin(DegreesToRadians(UserLat)) * Math.Cos(DegreesToRadians(SetLat)) * Math.Cos(DegreesToRadians(SetLog - UserLog));
-        // double y = Math.Sin(DegreesToRadians(SetLog - UserLog)) * Math.Cos(DegreesToRadians(SetLat));
-
-        // return (Math.Atan2(y, x) + Math.PI * 2) % (Math.PI * 2);
-
     }
 
     private float getDegree(Vector3 target_position)
@@ -395,10 +468,11 @@ public class NPC : MonoBehaviour
         return yRotationNormalized;
     }
 
-    // public static double DegreesToRadians(double angle)
-    // {
-    //     return angle * Math.PI / 180.0d;
-    // }
+    //Transform value into degress
+    public static double DegreesToRadians(double angle)
+    {
+        return angle * Math.PI / 180.0d;
+    }
 
     private float NormalizeAngle360(float angle)
     {
